@@ -1,0 +1,6 @@
+{
+  "name": "Indicadores Técnicos",
+  "description": "Aplicativo de indicadores técnicos com perfis de administrador e técnico, processamento de planilhas Excel, filtros por mês e período, notificações e sincronização offline.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
