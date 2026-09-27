@@ -110,6 +110,7 @@ fun HostingerGitHubScreen(
     var ghRepoInput by remember(uiState.hostingerConfig.githubRepo) { mutableStateOf(uiState.hostingerConfig.githubRepo) }
     var ghBranchInput by remember(uiState.hostingerConfig.githubBranch) { mutableStateOf(uiState.hostingerConfig.githubBranch) }
     var ghFolderInput by remember(uiState.hostingerConfig.githubFolderPath) { mutableStateOf(uiState.hostingerConfig.githubFolderPath) }
+    var ghTokenInput by remember(uiState.hostingerConfig.githubToken) { mutableStateOf(uiState.hostingerConfig.githubToken) }
     var autoSyncInput by remember(uiState.hostingerConfig.autoSyncOnStart) { mutableStateOf(uiState.hostingerConfig.autoSyncOnStart) }
     var showCodeDialog by remember { mutableStateOf(false) }
 
@@ -578,6 +579,64 @@ fun HostingerGitHubScreen(
                         }
                     }
 
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Token GitHub (Opcional - para repositórios privados)
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "Token GitHub (Opcional)",
+                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold, color = CorporateTextPrimary)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = "Necessário se o repo for privado",
+                                style = MaterialTheme.typography.bodySmall.copy(color = CorporateTextTertiary, fontSize = 11.sp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        OutlinedTextField(
+                            value = ghTokenInput,
+                            onValueChange = { ghTokenInput = it },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("github_token_input"),
+                            placeholder = { Text("ghp_xxxxxxxxxxxxxxxxxxxx") },
+                            singleLine = true,
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Dica sobre o painel Secrets do AI Studio
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = Color(0xFFF1F5F9),
+                        border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.HelpOutline,
+                                contentDescription = null,
+                                tint = CorporateBluePrimary,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Dica: Você também pode definir GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO, HOSTINGER_API_URL e HOSTINGER_API_KEY de forma segura no painel 'Secrets' do Google AI Studio.",
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    color = CorporateTextSecondary,
+                                    fontSize = 11.sp
+                                )
+                            )
+                        }
+                    }
+
                     Spacer(modifier = Modifier.height(14.dp))
 
                     // Botão Salvar
@@ -591,6 +650,7 @@ fun HostingerGitHubScreen(
                                     githubRepo = ghRepoInput,
                                     githubBranch = ghBranchInput,
                                     githubFolderPath = ghFolderInput,
+                                    githubToken = ghTokenInput,
                                     autoSyncOnStart = autoSyncInput
                                 )
                             )

@@ -305,6 +305,23 @@ object ExcelProcessor {
         val colNvFalhaApi = header.indexOfFirst { (it.contains("API") && (it.contains("NV") || it.contains("NÃO") || it.contains("NAO"))) }
             .takeIf { it >= 0 }
 
+        // Colunas da Visão Técnico Certificado Claro (Produção: Produtividade, Saldo | Revisita: Revisita, Saldo, Ganho | TEC1)
+        val saldoIndices = header.indices.filter { header[it].contains("SALDO") }
+        val colSaldoProd = when {
+            header.any { it.contains("SALDO") && (it.contains("PROD") || it.contains("PRODUÇÃO") || it.contains("PRODUCAO")) } ->
+                header.indexOfFirst { it.contains("SALDO") && (it.contains("PROD") || it.contains("PRODUÇÃO") || it.contains("PRODUCAO")) }
+            saldoIndices.isNotEmpty() -> saldoIndices[0]
+            else -> null
+        }
+        val colSaldoRev = when {
+            header.any { it.contains("SALDO") && (it.contains("REV") || it.contains("REVISITA")) } ->
+                header.indexOfFirst { it.contains("SALDO") && (it.contains("REV") || it.contains("REVISITA")) }
+            saldoIndices.size >= 2 -> saldoIndices[1]
+            else -> null
+        }
+        val colGanho = header.indexOfFirst { it.contains("GANHO") || it.contains("BONUS") || it.contains("BÔNUS") }
+            .takeIf { it >= 0 }
+
         val systemLogins = registeredUsers.map { it.login.lowercase().trim() }.toSet()
         val records = mutableListOf<IndicatorRecord>()
         val matchedTechnicians = mutableSetOf<String>()
@@ -403,6 +420,24 @@ object ExcelProcessor {
             val nvSem = if (colNvSemFalha != null) getCell(colNvSemFalha, "0").toIntOrNull() ?: 0 else if (valCategoria == "NV. SEM FALHA") 1 else 0
             val nvApi = if (colNvFalhaApi != null) getCell(colNvFalhaApi, "0").toIntOrNull() ?: 0 else if (valCategoria == "NV. FALHA API") 1 else 0
 
+            val saldoProdVal = if (colSaldoProd != null) {
+                getCell(colSaldoProd, "0.0").replace(",", ".").toDoubleOrNull() ?: (Math.round((prodVal - 5.0) * 10.0) / 10.0)
+            } else {
+                Math.round((prodVal - 5.0) * 10.0) / 10.0
+            }
+
+            val saldoRevVal = if (colSaldoRev != null) {
+                getCell(colSaldoRev, "0.0").replace(",", ".").toDoubleOrNull() ?: (Math.round((7.0 - revVal) * 10.0) / 10.0)
+            } else {
+                Math.round((7.0 - revVal) * 10.0) / 10.0
+            }
+
+            val ganhoVal = if (colGanho != null) {
+                getCell(colGanho, if (isCert) "Atingido" else "")
+            } else {
+                if (isCert) "Atingido" else ""
+            }
+
             records.add(
                 IndicatorRecord(
                     tecnicoLogin = cleanLogin,
@@ -432,7 +467,10 @@ object ExcelProcessor {
                     vJustificado = vJust,
                     nvComFalha = nvCom,
                     nvSemFalha = nvSem,
-                    nvFalhaApi = nvApi
+                    nvFalhaApi = nvApi,
+                    saldoProducao = saldoProdVal,
+                    saldoRevisita = saldoRevVal,
+                    ganhoRevisita = ganhoVal
                 )
             )
         }

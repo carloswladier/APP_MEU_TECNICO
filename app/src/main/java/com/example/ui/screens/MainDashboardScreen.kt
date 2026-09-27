@@ -353,74 +353,88 @@ fun MainDashboardScreen(
                         )
                     }
 
-                    // Card de Resumo de KPI da Aba
-                    item {
-                        KpiSummaryCard(
-                            kpi = kpiSummary,
-                            tab = uiState.currentTab
-                        )
-                    }
-
-                    // Cabeçalho da Lista de Registros
-                    item {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "Histórico de Registros da Planilha (${filteredRecords.size})",
-                                style = MaterialTheme.typography.titleSmall.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    color = CorporateTextPrimary
-                                )
-                            )
-
-                            Text(
-                                text = uiState.lastSyncTime,
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    color = CorporateTextSecondary,
-                                    fontSize = 11.sp
-                                )
-                            )
-                        }
-                    }
-
-                    // Lista de Registros Detalhados
-                    if (filteredRecords.isEmpty()) {
+                    // Se estiver na aba Técnico Certificado, exibe a Visão Oficial da Planilha Claro
+                    if (uiState.currentTab == AppTab.TECNICO_CERTIFICADO) {
                         item {
-                            Surface(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 24.dp),
-                                shape = RoundedCornerShape(12.dp),
-                                color = MaterialTheme.colorScheme.surface,
-                                border = androidx.compose.foundation.BorderStroke(1.dp, CorporateBorder)
-                            ) {
-                                Column(
-                                    modifier = Modifier.padding(24.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Speed,
-                                        contentDescription = null,
-                                        tint = CorporateTextSecondary,
-                                        modifier = Modifier.size(36.dp)
-                                    )
-                                    Spacer(modifier = Modifier.height(10.dp))
-                                    Text(
-                                        text = "Nenhum resultado encontrado para os filtros selecionados.",
-                                        style = MaterialTheme.typography.bodyMedium.copy(
-                                            color = CorporateTextSecondary,
-                                            fontWeight = FontWeight.Medium
-                                        )
-                                    )
+                            TecnicoCertificadoSpreadsheetView(
+                                records = filteredRecords,
+                                kpi = kpiSummary,
+                                currentUser = currentUser,
+                                onSelectTechnician = { login ->
+                                    viewModel.setTechnicianFilter(login)
                                 }
-                            }
+                            )
                         }
                     } else {
-                        items(filteredRecords, key = { it.id }) { record ->
-                            RecordItemCard(record = record)
+                        // Card de Resumo de KPI das outras abas
+                        item {
+                            KpiSummaryCard(
+                                kpi = kpiSummary,
+                                tab = uiState.currentTab
+                            )
+                        }
+
+                        // Cabeçalho da Lista de Registros
+                        item {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Histórico de Registros da Planilha (${filteredRecords.size})",
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = CorporateTextPrimary
+                                    )
+                                )
+
+                                Text(
+                                    text = uiState.lastSyncTime,
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = CorporateTextSecondary,
+                                        fontSize = 11.sp
+                                    )
+                                )
+                            }
+                        }
+
+                        // Lista de Registros Detalhados
+                        if (filteredRecords.isEmpty()) {
+                            item {
+                                Surface(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 24.dp),
+                                    shape = RoundedCornerShape(12.dp),
+                                    color = MaterialTheme.colorScheme.surface,
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, CorporateBorder)
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(24.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Speed,
+                                            contentDescription = null,
+                                            tint = CorporateTextSecondary,
+                                            modifier = Modifier.size(36.dp)
+                                        )
+                                        Spacer(modifier = Modifier.height(10.dp))
+                                        Text(
+                                            text = "Nenhum resultado encontrado para os filtros selecionados.",
+                                            style = MaterialTheme.typography.bodyMedium.copy(
+                                                color = CorporateTextSecondary,
+                                                fontWeight = FontWeight.Medium
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        } else {
+                            items(filteredRecords, key = { it.id }) { record ->
+                                RecordItemCard(record = record)
+                            }
                         }
                     }
 

@@ -75,6 +75,7 @@ data class HostingerConfig(
     val githubRepo: String = "indicadores-claro",
     val githubBranch: String = "main",
     val githubFolderPath: String = "",
+    val githubToken: String = "",
     val autoSyncOnStart: Boolean = false,
     val lastSyncTimestamp: Long = 0L,
     val lastSyncStatus: String = "Aguardando primeira sincronização"

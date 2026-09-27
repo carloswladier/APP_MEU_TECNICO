@@ -40,11 +40,15 @@ class GitHubSyncService {
             val rawUrl = "https://raw.githubusercontent.com/$owner/$repo/$branch/$folder$fileName"
 
             try {
-                val request = Request.Builder()
+                val reqBuilder = Request.Builder()
                     .url(rawUrl)
                     .addHeader("Accept", "application/octet-stream, text/csv, */*")
-                    .get()
-                    .build()
+
+                if (config.githubToken.isNotBlank()) {
+                    reqBuilder.addHeader("Authorization", "Bearer ${config.githubToken.trim()}")
+                }
+
+                val request = reqBuilder.get().build()
 
                 val response = client.newCall(request).execute()
                 if (response.isSuccessful) {
@@ -121,9 +125,12 @@ class GitHubSyncService {
                 else -> "CRITICO"
             }
 
-            val prod = if (tech.login == "tec.carlos") 5.8 else 5.2
-            val rev = if (fileKey == GitHubFileKey.REVISITA_30D) realizado else 4.5
-            val tec1 = if (fileKey == GitHubFileKey.TECNICO_CERTIFICADO) realizado else 96.5
+            val prod = if (tech.login == "tec.adilson") 5.5 else if (tech.login == "tec.carlos") 5.8 else 5.2
+            val rev = if (tech.login == "tec.adilson") 3.0 else if (fileKey == GitHubFileKey.REVISITA_30D) realizado else 4.5
+            val tec1 = if (tech.login == "tec.adilson") 100.0 else if (fileKey == GitHubFileKey.TECNICO_CERTIFICADO) realizado else 96.5
+            val saldoP = if (tech.login == "tec.adilson") 44.2 else if (prod >= 5.0) 36.4 else -6.2
+            val saldoR = if (tech.login == "tec.adilson") 1.3 else if (rev <= 7.0) 1.8 else -0.8
+            val ganhoR = if (tech.login == "tec.adilson" || rev <= 7.0) "Atingido" else "—"
 
             records.add(
                 IndicatorRecord(
@@ -154,7 +161,10 @@ class GitHubSyncService {
                     vJustificado = 0,
                     nvComFalha = if (fileKey == GitHubFileKey.CERTIDAO_ATENDIMENTO) 2 else 0,
                     nvSemFalha = if (fileKey == GitHubFileKey.CERTIDAO_ATENDIMENTO) 1 else 0,
-                    nvFalhaApi = 0
+                    nvFalhaApi = 0,
+                    saldoProducao = saldoP,
+                    saldoRevisita = saldoR,
+                    ganhoRevisita = ganhoR
                 )
             )
             osCounter++

@@ -1238,30 +1238,60 @@ fun RecordItemCard(
                             val revOk = record.revisita <= 7.0
                             val tec1Ok = record.tec1 >= 95.0
 
-                            Text(
-                                text = "Prod: ${record.produtividade} (>=5.0)",
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (prodOk) StatusSuccess else StatusDanger
+                            Column {
+                                Text(
+                                    text = "Prod: ${record.produtividade} (>=5.0)",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (prodOk) StatusSuccess else StatusDanger
+                                    )
                                 )
-                            )
-                            Text(
-                                text = "Rev: ${record.revisita}% (<=7%)",
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (revOk) StatusSuccess else StatusDanger
+                                Text(
+                                    text = "Saldo: ${if (record.saldoProducao > 0) "+${record.saldoProducao}" else record.saldoProducao}",
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        fontSize = 9.sp,
+                                        color = CorporateTextSecondary
+                                    )
                                 )
-                            )
-                            Text(
-                                text = "TEC1: ${record.tec1}% (>=95%)",
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (tec1Ok) StatusSuccess else StatusDanger
+                            }
+
+                            Column {
+                                Text(
+                                    text = "Rev: ${record.revisita}% (<=7%)",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (revOk) StatusSuccess else StatusDanger
+                                    )
                                 )
-                            )
+                                Text(
+                                    text = "Saldo: ${if (record.saldoRevisita > 0) "+${record.saldoRevisita}" else record.saldoRevisita}${if (record.ganhoRevisita.isNotBlank() && record.ganhoRevisita != "—") " • ${record.ganhoRevisita}" else ""}",
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        fontSize = 9.sp,
+                                        color = CorporateTextSecondary
+                                    )
+                                )
+                            }
+
+                            Column {
+                                Text(
+                                    text = "TEC1: ${record.tec1}% (>=95%)",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (tec1Ok) StatusSuccess else StatusDanger
+                                    )
+                                )
+                                Text(
+                                    text = if (record.isCertificado) "Selo Claro: ✓" else "Selo: Pendente",
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        fontSize = 9.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (record.isCertificado) StatusSuccess else StatusWarning
+                                    )
+                                )
+                            }
                         }
                     }
                 }

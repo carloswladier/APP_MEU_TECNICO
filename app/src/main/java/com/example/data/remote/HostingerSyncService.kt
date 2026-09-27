@@ -116,6 +116,9 @@ class HostingerSyncService {
                 obj.put("nvComFalha", r.nvComFalha)
                 obj.put("nvSemFalha", r.nvSemFalha)
                 obj.put("nvFalhaApi", r.nvFalhaApi)
+                obj.put("saldoProducao", r.saldoProducao)
+                obj.put("saldoRevisita", r.saldoRevisita)
+                obj.put("ganhoRevisita", r.ganhoRevisita)
                 recordsArray.put(obj)
             }
             rootObj.put("records", recordsArray)
@@ -223,7 +226,10 @@ class HostingerSyncService {
                             vJustificado = o.optInt("vJustificado", 0),
                             nvComFalha = o.optInt("nvComFalha", 0),
                             nvSemFalha = o.optInt("nvSemFalha", 0),
-                            nvFalhaApi = o.optInt("nvFalhaApi", 0)
+                            nvFalhaApi = o.optInt("nvFalhaApi", 0),
+                            saldoProducao = o.optDouble("saldoProducao", 0.0),
+                            saldoRevisita = o.optDouble("saldoRevisita", 0.0),
+                            ganhoRevisita = o.optString("ganhoRevisita", "")
                         )
                     )
                 }

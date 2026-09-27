@@ -74,7 +74,10 @@ data class IndicatorRecord(
     val vJustificado: Int = 0,
     val nvComFalha: Int = 0,
     val nvSemFalha: Int = 0,
-    val nvFalhaApi: Int = 0
+    val nvFalhaApi: Int = 0,
+    val saldoProducao: Double = 0.0,
+    val saldoRevisita: Double = 0.0,
+    val ganhoRevisita: String = ""
 )
 
 enum class ValidacaoCertidao(val label: String, val isValidado: Boolean) {

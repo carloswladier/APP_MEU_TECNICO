@@ -41,12 +41,21 @@ object SampleData {
             email = "juliana.oliveira@empresa.com.br",
             role = UserRole.TECNICO,
             passwordHash = "123456"
+        ),
+        User(
+            id = 6,
+            login = "tec.adilson",
+            name = "ADILSON JOSE OLIVEIRA DE SOUZA FILHO",
+            email = "adilson.souza@empresa.com.br",
+            role = UserRole.TECNICO,
+            passwordHash = "123456"
         )
     )
 
     fun getInitialRecords(): List<IndicatorRecord> {
         val records = mutableListOf<IndicatorRecord>()
         val technicians = listOf(
+            Pair("tec.adilson", "ADILSON JOSE OLIVEIRA DE SOUZA FILHO"),
             Pair("tec.carlos", "Carlos Wladier"),
             Pair("tec.silva", "Marcos Silva"),
             Pair("tec.santos", "Lucas Santos"),
@@ -75,23 +84,49 @@ object SampleData {
                     var revVal = 0.0
                     var tec1Val = 0.0
                     var isCert = false
+                    var saldoProd = 0.0
+                    var saldoRev = 0.0
+                    var ganhoRev = ""
 
                     val (meta, realizado, status) = when (type) {
                         IndicatorType.TECNICO_CERTIFICADO -> {
                             val target = 95.0
                             prodVal = when (tech.first) {
+                                "tec.adilson" -> 5.5
                                 "tec.carlos" -> 5.6
                                 "tec.silva" -> 5.3
                                 "tec.santos" -> 4.7
                                 else -> 5.4
                             }
+                            saldoProd = when (tech.first) {
+                                "tec.adilson" -> 44.2
+                                "tec.carlos" -> 46.5
+                                "tec.silva" -> 32.1
+                                "tec.santos" -> -12.4
+                                else -> 38.0
+                            }
                             revVal = when (tech.first) {
+                                "tec.adilson" -> 3.0
                                 "tec.carlos" -> 4.2
                                 "tec.silva" -> 5.8
                                 "tec.santos" -> 7.8
                                 else -> 5.9
                             }
+                            saldoRev = when (tech.first) {
+                                "tec.adilson" -> 1.3
+                                "tec.carlos" -> 1.8
+                                "tec.silva" -> 0.8
+                                "tec.santos" -> -0.8
+                                else -> 0.9
+                            }
+                            ganhoRev = when (tech.first) {
+                                "tec.adilson" -> "Atingido"
+                                "tec.carlos" -> "Atingido"
+                                "tec.santos" -> "Não Atingido"
+                                else -> "Atingido"
+                            }
                             tec1Val = when (tech.first) {
+                                "tec.adilson" -> 100.0
                                 "tec.carlos" -> 97.8
                                 "tec.silva" -> 96.2
                                 "tec.santos" -> 93.4
@@ -170,7 +205,10 @@ object SampleData {
                             vJustificado = 0,
                             nvComFalha = if (type == IndicatorType.CERTIDAO_ATENDIMENTO) 6 else 0,
                             nvSemFalha = if (type == IndicatorType.CERTIDAO_ATENDIMENTO) 4 else 0,
-                            nvFalhaApi = 0
+                            nvFalhaApi = 0,
+                            saldoProducao = saldoProd,
+                            saldoRevisita = saldoRev,
+                            ganhoRevisita = ganhoRev
                         )
                     )
                 }

@@ -64,6 +64,9 @@ try {
             `nvComFalha` INT DEFAULT 0,
             `nvSemFalha` INT DEFAULT 0,
             `nvFalhaApi` INT DEFAULT 0,
+            `saldoProducao` DOUBLE DEFAULT 0,
+            `saldoRevisita` DOUBLE DEFAULT 0,
+            `ganhoRevisita` VARCHAR(100) DEFAULT '',
             `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             INDEX idx_login (`tecnicoLogin`),
             INDEX idx_tipo (`indicatorType`)
@@ -98,8 +101,8 @@ if (${s}action === 'ping' || ${s}action === 'status') {
         meta, realizado, atingimentoPercentual, totalAtendimentos, status, ordemServico,
         cliente, observacoes, origemArquivo, dataUpload, produtividade, revisita, tec1,
         isCertificado, categoriaCertidao, vSemFalha, vComFalha, vFalhaApi, vJustificado,
-        nvComFalha, nvSemFalha, nvFalhaApi
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        nvComFalha, nvSemFalha, nvFalhaApi, saldoProducao, saldoRevisita, ganhoRevisita
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
     foreach (${s}records as ${s}r) {
         ${s}stmt->execute([
@@ -113,7 +116,8 @@ if (${s}action === 'ping' || ${s}action === 'status') {
             !empty(${s}r['isCertificado']) ? 1 : 0, ${s}r['categoriaCertidao'] ?? '',
             ${s}r['vSemFalha'] ?? 0, ${s}r['vComFalha'] ?? 0, ${s}r['vFalhaApi'] ?? 0,
             ${s}r['vJustificado'] ?? 0, ${s}r['nvComFalha'] ?? 0, ${s}r['nvSemFalha'] ?? 0,
-            ${s}r['nvFalhaApi'] ?? 0
+            ${s}r['nvFalhaApi'] ?? 0, ${s}r['saldoProducao'] ?? 0, ${s}r['saldoRevisita'] ?? 0,
+            ${s}r['ganhoRevisita'] ?? ''
         ]);
     }
     ${s}pdo->commit();
@@ -155,6 +159,9 @@ if (${s}action === 'ping' || ${s}action === 'status') {
     `nvComFalha` INT DEFAULT 0,
     `nvSemFalha` INT DEFAULT 0,
     `nvFalhaApi` INT DEFAULT 0,
+    `saldoProducao` DOUBLE DEFAULT 0,
+    `saldoRevisita` DOUBLE DEFAULT 0,
+    `ganhoRevisita` VARCHAR(100) DEFAULT '',
     `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_login (`tecnicoLogin`),
     INDEX idx_tipo (`indicatorType`)
